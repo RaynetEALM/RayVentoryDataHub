@@ -1,0 +1,39 @@
+﻿version: "3.7"
+services:
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "1434:1433"
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Start123!@#
+      - MSSQL_PID=Express
+    restart: always
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  web:
+    image: raynetgmbh/rayventory-datahub:12.3
+    ports:
+      - "81:80"
+    depends_on:
+      - database
+    restart: always
+    environment:
+      - DataHub_ConnectionStrings_System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#
+      - DataHub_ConnectionStrings_ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#
+      - DataHub_InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+      - BASEURL=http://localhost:81 
+
+  agent:
+    image: raynetgmbh/rayventory-datahub-agent:12.3
+    depends_on:
+      - web
+    restart: always
+    environment:
+      - DataHubAgent_DataHubUrl=http://web:80
+      - DataHubAgent_TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+
+volumes: 
+  sql_data:
