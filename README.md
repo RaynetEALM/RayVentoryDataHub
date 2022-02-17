@@ -84,7 +84,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
 #### The image ####
 RayVentory Data Hub is available on docker hub:
 * [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub)
-* [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent)
+* [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent)
 
 You can use tags `12.3` (recommended) or `stable` to get the last 12.3 or the last stable version respectively.
 
