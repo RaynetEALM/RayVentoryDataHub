@@ -103,7 +103,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
            - 3307:3306
      
        web:
-         image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5.5081.73
+         image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5
          ports:
            - "8080:80"
          depends_on:
@@ -122,7 +122,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
          links:
            - mariadb
        agent:
-         image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5.5081.73
+         image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5
          depends_on:
            - web
          restart: always
@@ -136,7 +136,7 @@ RayVentory Data Hub is available on docker hub:
 * [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub)
 * [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent)
 
-You can use tags `12.3` (recommended) or `stable` to get the last 12.3 or the last stable version respectively.
+You can use tags `12.5` (recommended) or `stable` to get the last 12.5 or the last stable version respectively.
 
 #### Environment Variables
 Data Hub:
