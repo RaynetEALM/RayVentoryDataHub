@@ -38,7 +38,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
 2. Provide the valid license for the product.
 3. After log-in, change your root password and create application users.
 
-#### Default docker-compose
+#### Default docker-compose (with SQL Server Express)
 
     version: "3.7"
     services:
@@ -56,30 +56,80 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - sql_data:/var/opt/mssql
     
       web:
-        image: raynetgmbh/rayventory-datahub:12.3
+        image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5.5081.73
         ports:
           - "81:80"
         depends_on:
           - database
         restart: always
         environment:
-          - DataHub_ConnectionStrings_System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#
-          - DataHub_ConnectionStrings_ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#
-          - DataHub_InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+          - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#
+          - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#
+          - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
+          - KotlinDirectoryPath=/app/raynet/datahub/kotlin
+          - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
           - BASEURL=http://localhost:81 
+        volumes:
+          - ./host-logs:/app/raynet/datahub/task-logs
     
       agent:
-        image: raynetgmbh/rayventory-datahub-agent:12.3
+        image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5.5081.73
         depends_on:
           - web
         restart: always
         environment:
-          - DataHubAgent_DataHubUrl=http://web:80
-          - DataHubAgent_TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-    
+          - DataHubUrl=http://web:80
+          - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+          - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
     volumes: 
       sql_data:
 
+#### Default docker-compose (with MariaDB)
+
+     version: "3.7"
+     services:
+     
+       mariadb:
+         image: "mariadb:latest"
+         restart: 'always'
+         volumes: 
+           - /var/docker/mariadb/conf:/etc/mysql
+         environment:
+           MYSQL_ROOT_PASSWORD: raynetRootPassword
+           MYSQL_DATABASE: datahub
+           MYSQL_USER: raynetUser
+           MYSQL_PASSWORD: raynetPassword
+         ports:
+           - 3307:3306
+     
+       web:
+         image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5.5081.73
+         ports:
+           - "8080:80"
+         depends_on:
+           - mariadb
+         restart: always
+         environment:
+           - connectionStrings__System=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
+           - connectionStrings__ReportDatabase=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
+           - connectionStrings__Driver=mysql
+           - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
+           - KotlinDirectoryPath=/app/raynet/datahub/kotlin
+           - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+           - BASEURL=http://localhost:8080 
+         volumes:
+           - ./host-logs:/app/raynet/datahub/task-logs
+         links:
+           - mariadb
+       agent:
+         image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5.5081.73
+         depends_on:
+           - web
+         restart: always
+         environment:
+           - DataHubUrl=http://web:80
+           - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+           - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
 
 #### The image ####
 RayVentory Data Hub is available on docker hub:
@@ -92,6 +142,7 @@ You can use tags `12.3` (recommended) or `stable` to get the last 12.3 or the la
 Data Hub:
 * `DataHub_ConnectionStrings_System` - The connection string to the database, where the application data is stored
 * `DataHub_ConnectionStrings_ReportDatabase` - The connection string to the server, which orchestrates creation of tenant databases.
+* `DataHub_ConnectionStrings_Driver` - The type of the underlying database driver (supported values: `mysql` or `mssql` (default))
 * `DataHub_InitialTenantId` - The GUID of the initial tenant.
 * `BASEURL` - The base URL, that will be used in the web browser to access the content. Should also contain protocol name and the port.
 
@@ -99,19 +150,13 @@ Data Hub Agent:
 * `DataHubAgent_DataHubUrl` - The URL to connect to the server. It can reference internal docker services, and should contain the protocol name and the port.
 * `DataHubAgent_TenantId` - The tenant ID, assigned to the agent.
           - 
-Database related:
-* `SA_PASSWORD` - The password for the default user `sa`
-
-#### Volumes
-* `sql_data` - data volume for Microsoft SQL Server Express
-
 ## License Activation ##
-RayManageSoft Unified Endpoint Manager needs a valid license to run. If there is no valid license, RayManageSoft Unified Endpoint Manager will open the activation screen.
+RayVentory Data Hub needs a valid license to run. If there is no valid license, RayVentory Data Hub will open the activation screen.
 
 # Documentation
-* [Release notes (PDF)](docs/RayVentory_Data_Hub_12.3_Release_Notes.pdf)
-* [Installation Guide (PDF)](docs/RayVentory_Data_Hub_12.3_Installation_Guide.pdf)
-* [User Guide (PDF)](docs/RayVentory_Data_Hub_12.3_Administration_and_User_Guide.pdf)
+* [Release notes (PDF)](docs/RayVentory_Data_Hub_12.5_Release_Notes.pdf)
+* [Installation Guide (PDF)](docs/RayVentory_Data_Hub_12.5_Installation_Guide.pdf)
+* [User Guide (PDF)](docs/RayVentory_Data_Hub_12.5_Administration_and_User_Guide.pdf)
 
 ## Find Us
 * [Raynet GmbH corporate website](https://raynet.de)
