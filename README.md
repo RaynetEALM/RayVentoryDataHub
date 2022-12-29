@@ -20,7 +20,7 @@ On Windows, make sure to use Linux Containers, WSL2 is recommended.
 
 ### Usage
 The default configuration consists of three containers:
-* A database (Microsoft SQL Server Express)
+* A database (Microsoft SQL Server Express OR MariaDB)
 * Frontend and backend for the Data Hub
 * Data Hub Agent
 
@@ -28,7 +28,7 @@ The default configuration is standalone and should work out-of-the-box.
 
 #### Installation with docker-compose
 The easiest way to run the image with reasonable default is to use `docker-compose` command.
-1. Get the [`docker-compose.yml`](docker-compose.yml) file from this repository
+1. Get the [`docker-compose.yml`](docker-compose.yml) file from this repository, or [`docker-compose_mariaDb.yml`](docker-compose_mariaDb.yml) for MariaDB.
 2. In the folder containing the downloaded definition, run the following command: `docker-compose up -d`. 
  
 #### First start ####
