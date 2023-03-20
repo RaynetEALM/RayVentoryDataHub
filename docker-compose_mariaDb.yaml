@@ -15,7 +15,7 @@ services:
       - 3307:3306
 
   web:
-    image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5.5081.73
+    image: raynetgmbh/rayventory-datahub:12.5
     ports:
       - "8080:80"
     depends_on:
@@ -34,7 +34,7 @@ services:
     links:
       - mariadb
   agent:
-    image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5.5081.73
+    image: raynetgmbh/rayventory-datahub-agent:12.5
     depends_on:
       - web
     restart: always
