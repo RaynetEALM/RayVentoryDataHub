@@ -56,7 +56,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - sql_data:/var/opt/mssql
     
       web:
-        image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5.5081.73
+        image: raynetgmbh/rayventory-datahub:12.5
         ports:
           - "81:80"
         depends_on:
@@ -73,7 +73,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - ./host-logs:/app/raynet/datahub/task-logs
     
       agent:
-        image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5
+        image: raynetgmbh/rayventory-datahub-agent:12.5
         depends_on:
           - web
         restart: always
@@ -86,50 +86,50 @@ The easiest way to run the image with reasonable default is to use `docker-compo
 
 #### Default docker-compose (with MariaDB)
 
-     version: "3.7"
-     services:
-     
-       mariadb:
-         image: "mariadb:latest"
-         restart: 'always'
-         volumes: 
-           - /var/docker/mariadb/conf:/etc/mysql
-         environment:
-           MYSQL_ROOT_PASSWORD: raynetRootPassword
-           MYSQL_DATABASE: datahub
-           MYSQL_USER: raynetUser
-           MYSQL_PASSWORD: raynetPassword
-         ports:
-           - 3307:3306
-     
-       web:
-         image: raynetnightly.azurecr.io/raynet/rayventory/datahub:12.5
-         ports:
-           - "8080:80"
-         depends_on:
-           - mariadb
-         restart: always
-         environment:
-           - connectionStrings__System=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
-           - connectionStrings__ReportDatabase=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
-           - connectionStrings__Driver=mysql
-           - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
-           - KotlinDirectoryPath=/app/raynet/datahub/kotlin
-           - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-           - BASEURL=http://localhost:8080 
-         volumes:
-           - ./host-logs:/app/raynet/datahub/task-logs
-         links:
-           - mariadb
-       agent:
-         image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5
-         depends_on:
-           - web
-         restart: always
-         environment:
-           - DataHubUrl=http://web:80
-           - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-           - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
+    version: "3.7"
+    services:
+    
+      mariadb:
+        image: "mariadb:latest"
+        restart: 'always'
+        volumes: 
+          - /var/docker/mariadb/conf:/etc/mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: raynetRootPassword
+          MYSQL_DATABASE: datahub
+          MYSQL_USER: raynetUser
+          MYSQL_PASSWORD: raynetPassword
+        ports:
+          - 3307:3306
+    
+      web:
+        image: raynetgmbh/rayventory-datahub:12.5
+        ports:
+          - "8080:80"
+        depends_on:
+          - mariadb
+        restart: always
+        environment:
+          - connectionStrings__System=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
+          - connectionStrings__ReportDatabase=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
+          - connectionStrings__Driver=mysql
+          - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
+          - KotlinDirectoryPath=/app/raynet/datahub/kotlin
+          - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+          - BASEURL=http://localhost:8080 
+        volumes:
+          - ./host-logs:/app/raynet/datahub/task-logs
+        links:
+          - mariadb
+      agent:
+        image: raynetgmbh/rayventory-datahub-agent:12.5
+        depends_on:
+          - web
+        restart: always
+        environment:
+          - DataHubUrl=http://web:80
+          - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+          - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
 
 #### The image ####
 RayVentory Data Hub is available on docker hub:
