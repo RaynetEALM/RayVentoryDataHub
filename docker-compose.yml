@@ -1,4 +1,4 @@
-﻿version: "3.7"
+version: "3.7"
 services:
 
   database:
@@ -14,26 +14,30 @@ services:
       - sql_data:/var/opt/mssql
 
   web:
-    image: raynetgmbh/rayventory-datahub:12.3
+    image: raynetgmbh/rayventory-datahub:12.5
     ports:
       - "81:80"
     depends_on:
       - database
     restart: always
     environment:
-      - DataHub_ConnectionStrings_System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#
-      - DataHub_ConnectionStrings_ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#
-      - DataHub_InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+      - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#
+      - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#
+      - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
+      - KotlinDirectoryPath=/app/raynet/datahub/kotlin
+      - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
       - BASEURL=http://localhost:81 
+    volumes:
+      - ./host-logs:/app/raynet/datahub/task-logs
 
   agent:
-    image: raynetgmbh/rayventory-datahub-agent:12.3
+    image: raynetgmbh/rayventory-datahub-agent:12.5
     depends_on:
       - web
     restart: always
     environment:
-      - DataHubAgent_DataHubUrl=http://web:80
-      - DataHubAgent_TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-
+      - DataHubUrl=http://web:80
+      - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+      - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
 volumes: 
   sql_data:

@@ -73,7 +73,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - ./host-logs:/app/raynet/datahub/task-logs
     
       agent:
-        image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5.5081.73
+        image: raynetnightly.azurecr.io/raynet/rayventory/datahub-agent:12.5
         depends_on:
           - web
         restart: always
