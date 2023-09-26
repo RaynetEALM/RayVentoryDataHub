@@ -56,7 +56,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - sql_data:/var/opt/mssql
     
       web:
-        image: raynetgmbh/rayventory-datahub:12.5
+        image: raynetgmbh/rayventory-datahub:12.6
         ports:
           - "81:80"
         depends_on:
@@ -73,7 +73,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - ./host-logs:/app/raynet/datahub/task-logs
     
       agent:
-        image: raynetgmbh/rayventory-datahub-agent:12.5
+        image: raynetgmbh/rayventory-datahub-agent:12.6
         depends_on:
           - web
         restart: always
@@ -103,7 +103,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
           - 3307:3306
     
       web:
-        image: raynetgmbh/rayventory-datahub:12.5
+        image: raynetgmbh/rayventory-datahub:12.6
         ports:
           - "8080:80"
         depends_on:
@@ -122,7 +122,7 @@ The easiest way to run the image with reasonable default is to use `docker-compo
         links:
           - mariadb
       agent:
-        image: raynetgmbh/rayventory-datahub-agent:12.5
+        image: raynetgmbh/rayventory-datahub-agent:12.6
         depends_on:
           - web
         restart: always
@@ -154,9 +154,9 @@ Data Hub Agent:
 RayVentory Data Hub needs a valid license to run. If there is no valid license, RayVentory Data Hub will open the activation screen.
 
 # Documentation
-* [Release notes (PDF)](docs/RayVentory_Data_Hub_12.5_Release_Notes.pdf)
-* [Installation Guide (PDF)](docs/RayVentory_Data_Hub_12.5_Installation_Guide.pdf)
-* [User Guide (PDF)](docs/RayVentory_Data_Hub_12.5_Administration_and_User_Guide.pdf)
+* [Release notes (HTML)](https://docs.raynet.de/rayventory/datahub/latest/release-notes)
+* [Installation Guide (HTML)](https://docs.raynet.de/rayventory/datahub/latest/installation-guide)
+* [User Guide (HTML)](https://docs.raynet.de/rayventory/datahub/latest/user-guide)
 
 ## Find Us
 * [Raynet GmbH corporate website](https://raynet.de)
