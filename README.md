@@ -136,7 +136,7 @@ RayVentory Data Hub is available on docker hub:
 * [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub)
 * [`https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent`](https://hub.docker.com/r/raynetgmbh/rayventory-datahub-agent)
 
-You can use tags `12.5` (recommended) or `stable` to get the last 12.5 or the last stable version respectively.
+You can use tags `12.6` (recommended) or `stable` to get the last 12.6 or the last stable version respectively.
 
 #### Environment Variables
 Data Hub:
