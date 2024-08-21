@@ -3,42 +3,51 @@ services:
 
   mariadb:
     image: "mariadb:latest"
-    restart: 'always'
-    volumes: 
-      - /var/docker/mariadb/conf:/etc/mysql
+    ports:
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: raynetRootPassword
       MYSQL_DATABASE: datahub
       MYSQL_USER: raynetUser
       MYSQL_PASSWORD: raynetPassword
-    ports:
-      - 3307:3306
-
+    restart: 'always'
+    volumes: 
+      - /var/docker/mariadb/conf:/etc/mysql
+      - mariadb_data:/var/lib/mysql
   web:
-    image: raynetgmbh/rayventory-datahub:12.5
+    image: raynetgmbh/rayventory-datahub:14.0.5915.129
     ports:
-      - "8080:80"
+      - "8080:8080"
     depends_on:
       - mariadb
     restart: always
     environment:
-      - connectionStrings__System=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
-      - connectionStrings__ReportDatabase=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword
+      - connectionStrings__System=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword;AllowUserVariables=True;UseAffectedRows=False
+      - connectionStrings__ReportDatabase=Server=mariadb,3307;Database=datahub;User ID=root;Password=raynetRootPassword;AllowUserVariables=True;UseAffectedRows=False
       - connectionStrings__Driver=mysql
       - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
       - KotlinDirectoryPath=/app/raynet/datahub/kotlin
       - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+      - Logging__LogLevel__Default=Warning
       - BASEURL=http://localhost:8080 
+      - TokenManagement__secret=Set-New-Secret-With-Minimum-32-Symbols
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_HTTP_PORTS=8080
+      - Seeding__DefaultApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
     volumes:
       - ./host-logs:/app/raynet/datahub/task-logs
     links:
       - mariadb
   agent:
-    image: raynetgmbh/rayventory-datahub-agent:12.5
+    image: raynetgmbh/rayventory-datahub-agent:14.0.5915.129
     depends_on:
       - web
     restart: always
     environment:
-      - DataHubUrl=http://web:80
+      - DataHubUrl=http://web:8080
       - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
       - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
+      - DataHubApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+volumes: 
+  mariadb_data:
+  
