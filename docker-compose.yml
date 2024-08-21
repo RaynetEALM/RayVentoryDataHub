@@ -14,30 +14,37 @@ services:
       - sql_data:/var/opt/mssql
 
   web:
-    image: raynetgmbh/rayventory-datahub:12.5
+    image: raynetgmbh/rayventory-datahub:14.0.5915.129
     ports:
-      - "81:80"
+      - "8080:8080"
     depends_on:
       - database
     restart: always
     environment:
-      - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#
-      - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#
+      - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#;Encrypt=False
+      - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#;Encrypt=False
+      - connectionStrings__Driver=mssql
       - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
       - KotlinDirectoryPath=/app/raynet/datahub/kotlin
       - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-      - BASEURL=http://localhost:81 
+      - Logging__LogLevel__Default=Warning
+      - BASEURL=http://localhost:8080
+      - TokenManagement__secret=Set-New-Secret-With-Minimum-32-Symbols
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_HTTP_PORTS=8080
+      - Seeding__DefaultApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
     volumes:
       - ./host-logs:/app/raynet/datahub/task-logs
 
   agent:
-    image: raynetgmbh/rayventory-datahub-agent:12.5
+    image: raynetgmbh/rayventory-datahub-agent:14.0.5915.129
     depends_on:
       - web
     restart: always
     environment:
-      - DataHubUrl=http://web:80
+      - DataHubUrl=http://web:8080
       - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
       - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
+      - DataHubApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
 volumes: 
   sql_data:
