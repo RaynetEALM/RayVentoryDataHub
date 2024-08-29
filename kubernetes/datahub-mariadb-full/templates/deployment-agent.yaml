@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ .Release.Name }}-agent'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Release.Name }}-agent'
+  template:
+    metadata:
+      labels:
+        app: '{{ .Release.Name }}-agent'
+    spec:
+      containers:
+        - name: agent
+          image: '{{ .Values.agent.repository.image }}{{ if ne .Values.agent.repository.tag "" }}:{{ .Values.agent.repository.tag }}{{ end }}'
+          env:
+            - name: DataHubUrl
+              value: '{{ tpl .Values.agent.environment.DataHubUrl . }}'
+            - name: TenantId
+              value: '{{ tpl .Values.agent.environment.TenantId . }}'
+            - name: KotlinDirectoryPath
+              value: '{{ tpl .Values.agent.environment.KotlinDirectoryPath . }}'
+            - name: DataHubApiKey
+              value: '{{ tpl .Values.agent.environment.DataHubApiKey . }}'

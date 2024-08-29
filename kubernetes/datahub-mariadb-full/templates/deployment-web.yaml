@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ .Release.Name }}-web'
+spec:
+  selector:
+    matchLabels:
+      app: '{{ .Release.Name }}-web'
+  template:
+    metadata:
+      labels:
+        app: '{{ .Release.Name }}-web'
+    spec:
+      containers:
+        - name: web
+          image: '{{ .Values.web.repository.image }}{{ if ne .Values.web.repository.tag "" }}:{{ .Values.web.repository.tag }}{{ end }}'
+          ports:
+            - containerPort: 8080
+          env:
+            - name: connectionStrings__System
+              value: '{{ tpl .Values.web.environment.connectionStrings__System . }}'
+            - name: connectionStrings__ReportDatabase
+              value: '{{ tpl .Values.web.environment.connectionStrings__ReportDatabase . }}'
+            - name: connectionStrings__Driver
+              value: '{{ tpl .Values.web.environment.connectionStrings__Driver . }}'
+            - name: TasksManagement__LogsDirectory
+              value: '{{ tpl .Values.web.environment.TasksManagement__LogsDirectory . }}'
+            - name: KotlinDirectoryPath
+              value: '{{ tpl .Values.web.environment.KotlinDirectoryPath . }}'
+            - name: InitialTenantId
+              value: '{{ tpl .Values.web.environment.InitialTenantId . }}'
+            - name: Logging__LogLevel__Default
+              value: '{{ tpl .Values.web.environment.Logging__LogLevel__Default . }}'
+            - name: BASEURL
+              value: '{{ tpl .Values.web.environment.BASEURL . }}'
+            - name: ASPNETCORE_URLS
+              value: '{{ tpl .Values.web.environment.ASPNETCORE_URLS . }}'
+            - name: ASPNETCORE_HTTP_PORTS
+              value: '{{ tpl .Values.web.environment.ASPNETCORE_HTTP_PORTS . }}'
+            - name: Seeding__DefaultApiKey
+              value: '{{ tpl .Values.web.environment.Seeding__DefaultApiKey . }}'
+            - name: TokenManagement__secret
+              value: '{{ tpl .Values.web.environment.TokenManagement__secret . }}'
+          volumeMounts:
+            - name: host-logs
+              mountPath: /app/raynet/datahub/task-logs
+      volumes:
+        - name: host-logs
+          {{- if  .Values.web.persistence.hostlogs.enabled }}
+          persistentVolumeClaim:
+            claimName: '{{ .Release.Name }}-host-logs-pvc'
+          {{ else }}
+          emptyDir: {}
+          {{- end }}

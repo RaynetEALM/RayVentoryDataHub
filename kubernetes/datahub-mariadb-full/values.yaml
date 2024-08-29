@@ -1,0 +1,55 @@
+mariadb:
+  repository:
+    image: mariadb
+    tag: latest
+  port: 3306
+  rootPassword: raynetRootPassword
+  database: datahub
+  user: raynetUser
+  password: raynetPassword
+  persistence:
+    mariadbdata:
+      capacity: 10Gi
+      enabled: true
+  # Uncomment one of the following based on the environment
+  # serviceType: LoadBalancer
+  serviceType: NodePort
+  # serviceType: ClusterIP
+
+web:
+  repository:
+    image: raynetgmbh/rayventory-datahub
+    tag: "14.0.5915.129"
+  port: 8080
+  environment:
+    connectionStrings__System: Server={{ .Release.Name }}-mariadb,{{ .Values.mariadb.port }};Database={{ .Values.mariadb.database }};User ID=root;Password={{ .Values.mariadb.rootPassword }};AllowUserVariables=True;UseAffectedRows=False
+    connectionStrings__ReportDatabase: Server={{ .Release.Name }}-mariadb,{{ .Values.mariadb.port  }};Database={{ .Values.mariadb.database }};User ID=root;Password={{ .Values.mariadb.rootPassword }};AllowUserVariables=True;UseAffectedRows=False
+    connectionStrings__Driver: mysql
+    TasksManagement__LogsDirectory: /app/raynet/datahub/task-logs
+    KotlinDirectoryPath: /app/raynet/datahub/kotlin
+    InitialTenantId: '{72ba6fc2-d5fa-49ee-8281-841e762aea05}'
+    Logging__LogLevel__Default: Warning
+    BASEURL: "http://localhost:{{ .Values.web.port }}"
+    ASPNETCORE_URLS: "http://+:{{ .Values.web.port }}"
+    ASPNETCORE_HTTP_PORTS: "{{ .Values.web.port }}"
+    Seeding__DefaultApiKey: AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+    TokenManagement__secret: RayVentoryJTST333TopSecretSecrSt1327
+  persistence:
+    hostlogs:
+      capacity: 1Gi
+      enabled: true
+  # Uncomment one of the following based on the environment
+  # serviceType: LoadBalancer
+  serviceType: NodePort
+  # serviceType: ClusterIP
+
+agent:
+  serviceType: NodePort 
+  repository:
+    image: raynetgmbh/rayventory-datahub-agent
+    tag: "14.0.5915.129"
+  environment:
+    DataHubUrl: http://{{ .Release.Name }}-web:{{ .Values.web.port }}
+    TenantId: '{72ba6fc2-d5fa-49ee-8281-841e762aea05}'
+    KotlinDirectoryPath: /app/raynet/datahub-agent/kotlin
+    DataHubApiKey: AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74

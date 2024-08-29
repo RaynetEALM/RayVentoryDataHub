@@ -1,0 +1,12 @@
+{{ if .Values.web.persistence.hostlogs.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: '{{ .Release.Name }}-host-logs-pvc'
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: '{{ .Values.web.persistence.hostlogs.capacity }}'
+{{- end -}}

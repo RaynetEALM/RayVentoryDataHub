@@ -38,6 +38,9 @@ The easiest way to run the image with reasonable default is to use `docker-compo
 2. Provide the valid license for the product.
 3. After log-in, change your root password and create application users.
 
+#### Installing on Kubernetes Cluster ####
+For Kubernetes-related instructions, visit the dedicated [kubernetes section](https://github.com/RaynetEALM/RayVentoryDataHub/kubernetes).
+
 #### Default docker-compose (with SQL Server Express)
 
     version: "3.7"
