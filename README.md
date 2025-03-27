@@ -46,57 +46,58 @@ For Kubernetes-related instructions, visit the dedicated [kubernetes section](ku
     version: "3.7"
     services:
     
-      database:
+    database:
         image: mcr.microsoft.com/mssql/server:2019-latest
         ports:
-          - "1434:1433"
+        - "1434:1433"
         environment: 
-          - ACCEPT_EULA=Y
-          - SA_PASSWORD=Start123!@#
-          - MSSQL_PID=Express
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=Start123!@#
+        - MSSQL_PID=Express
         restart: always
         volumes:
-          - sql_data:/var/opt/mssql
+        - sql_data:/var/opt/mssql
     
-      web:
-        image: raynetgmbh/rayventory-datahub:14.0.5915.129
+    web:
+        image: raynetgmbh/rayventory-datahub:14.1.6298.172
         ports:
-          - "8080:8080"
+        - "8080:8080"
         depends_on:
-          - database
+        - database
         restart: always
         environment:
-          - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#;Encrypt=False
-          - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#;Encrypt=False
-          - connectionStrings__Driver=mssql
-          - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
-          - KotlinDirectoryPath=/app/raynet/datahub/kotlin
-          - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-          - Logging__LogLevel__Default=Warning
-          - BASEURL=http://localhost:8080
-          - TokenManagement__secret=Set-New-Secret-With-Minimum-32-Symbols
-          - ASPNETCORE_URLS=http://+:8080
-          - ASPNETCORE_HTTP_PORTS=8080
-          - Seeding__DefaultApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+        - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#;Encrypt=False
+        - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=datahub;User ID=sa;Password=Start123!@#;Encrypt=False
+        - connectionStrings__Driver=mssql
+        - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
+        - KotlinDirectoryPath=/app/raynet/datahub/kotlin
+        - InitialTenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+        - Logging__LogLevel__Default=Warning
+        - BASEURL=http://localhost:8080
+        - TokenManagement__secret=Set-New-Secret-With-Minimum-32-Symbols
+        - ASPNETCORE_URLS=http://+:8080
+        - ASPNETCORE_HTTP_PORTS=8080
+        - Seeding__DefaultApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
         volumes:
-          - ./host-logs:/app/raynet/datahub/task-logs
+        - ./host-logs:/app/raynet/datahub/task-logs
     
-      agent:
-        image: raynetgmbh/rayventory-datahub-agent:14.0.5915.129
+    agent:
+        image: raynetgmbh/rayventory-datahub-agent:14.1.6298.172
         depends_on:
-          - web
+        - web
         restart: always
         environment:
-          - DataHubUrl=http://web:8080
-          - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
-          - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
-          - DataHubApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+        - DataHubUrl=http://web:8080
+        - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
+        - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
+        - DataHubApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+        - AgentId=70E33B8A-EEEB-4649-97FF-D258E042F9AF
     volumes: 
-      sql_data:
+    sql_data:
+
 
 #### Default docker-compose (with MariaDB)
 
-    version: "3.7"
     services:
     
       mariadb:
@@ -113,7 +114,7 @@ For Kubernetes-related instructions, visit the dedicated [kubernetes section](ku
           - /var/docker/mariadb/conf:/etc/mysql
           - mariadb_data:/var/lib/mysql
       web:
-        image: raynetgmbh/rayventory-datahub:14.0.5915.129
+        image: raynetgmbh/rayventory-datahub:14.1.6298.172
         ports:
           - "8080:8080"
         depends_on:
@@ -137,7 +138,7 @@ For Kubernetes-related instructions, visit the dedicated [kubernetes section](ku
         links:
           - mariadb
       agent:
-        image: raynetgmbh/rayventory-datahub-agent:14.0.5915.129
+        image: raynetgmbh/rayventory-datahub-agent:14.1.6298.172
         depends_on:
           - web
         restart: always
@@ -146,6 +147,7 @@ For Kubernetes-related instructions, visit the dedicated [kubernetes section](ku
           - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
           - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
           - DataHubApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+          - AgentId=70E33B8A-EEEB-4649-97FF-D258E042F9AF
     volumes: 
       mariadb_data:
 
