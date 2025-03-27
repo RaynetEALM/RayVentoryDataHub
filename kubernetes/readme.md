@@ -1,40 +1,38 @@
-# Helm Chart Deployment Templates for Kubernetes
+# Helm chart deployment templates for Kubernetes
 
-This repository provides examples of different deployment strategies for deploying the **Raynet One Data Hub** to a Kubernetes cluster using a Helm chart.
+Here one can find examples of different deployment strategies of Raynet One Data Hub to a kubernetes cluster using a helm chart.
 
 ## Basics
 
-The simplest way to deploy the chart is as follows:
+The simplest way to deploy the chart as is would be:
 
-1. **Prepare the Chart**  
-   Copy the Helm chart to a location where `helm` and `kubectl` are available.
+1. Make a copy of a chart to a location where helm/kubectl are available
+2. Execute adjust 'values.yaml' file to have correct deployment configuration (or use defaults)
+3. Run:
 
-2. **Configure Deployment**  
-   Edit the `values.yaml` file to have the correct deployment configuration, or use the default settings.
+``` bash
+helm install -f './<helm-char-directory>/values.yaml' '<deployment-name>' './<helm-char-directory>/'
+```
 
-3. **Deploy the Chart**  
-   Run the following command to install the chart:
+for example
 
-       helm install -f './<helm-chart-directory>/values.yaml' '<deployment-name>' './<helm-chart-directory>/'
+``` bash
+helm install -f './datahub-mariadb-full/values.yaml' dh './datahub-mariadb-full/'
+```
 
-   For example:
+4. Wait some time for all services to go up and check logs of all deployed containers.
+5. If there are issues, 
+  5.1. uninstall the deployment:
 
-       helm install -f './datahub-mariadb-full/values.yaml' dh './datahub-mariadb-full/'
+``` bash
+helm uninstall '<deployment-name>'
+```
 
-4. **Monitor Deployment**  
-   Wait for all services to start and check the logs of all deployed containers.
+for example
 
-5. ***Troubleshooting***  
-   If there are any issues:
+``` bash
+helm uninstall dh
+```
 
-   5.1 Uninstall the deployment:  
-
-       helm uninstall '<deployment-name>'
-
-   For example:
-
-       helm uninstall dh
-
-   5.2 Adjust the values in values.yaml as needed.
-
-   5.3 Re-deploy the chart with the updated values.
+  5.2 Adjust values
+  5.3 Re-deploy the chart with new values
