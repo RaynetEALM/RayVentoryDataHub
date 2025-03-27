@@ -19,7 +19,7 @@ mariadb:
 web:
   repository:
     image: raynetgmbh/rayventory-datahub
-    tag: "14.0.5915.129"
+    tag: "14.1.6298.172"
   port: 8080
   environment:
     connectionStrings__System: Server={{ .Release.Name }}-mariadb,{{ .Values.mariadb.port }};Database={{ .Values.mariadb.database }};User ID=root;Password={{ .Values.mariadb.rootPassword }};AllowUserVariables=True;UseAffectedRows=False
@@ -47,9 +47,10 @@ agent:
   serviceType: NodePort 
   repository:
     image: raynetgmbh/rayventory-datahub-agent
-    tag: "14.0.5915.129"
+    tag: "14.1.6298.172"
   environment:
     DataHubUrl: http://{{ .Release.Name }}-web:{{ .Values.web.port }}
     TenantId: '{72ba6fc2-d5fa-49ee-8281-841e762aea05}'
     KotlinDirectoryPath: /app/raynet/datahub-agent/kotlin
     DataHubApiKey: AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+    AgentId: 70E33B8A-EEEB-4649-97FF-D258E042F9AF
