@@ -14,7 +14,7 @@ services:
       - sql_data:/var/opt/mssql
 
   web:
-    image: raynetgmbh/rayventory-datahub:14.0.5915.129
+    image: raynetgmbh/rayventory-datahub:14.1.6298.172
     ports:
       - "8080:8080"
     depends_on:
@@ -22,7 +22,7 @@ services:
     restart: always
     environment:
       - connectionStrings__System=Server=database,1433;Database=datahub;User ID=sa;Password=Start123!@#;Encrypt=False
-      - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=master;User ID=sa;Password=Start123!@#;Encrypt=False
+      - connectionStrings__ReportDatabase=Server=database,1433;Initial Catalog=datahub;User ID=sa;Password=Start123!@#;Encrypt=False
       - connectionStrings__Driver=mssql
       - TasksManagement__LogsDirectory=/app/raynet/datahub/task-logs
       - KotlinDirectoryPath=/app/raynet/datahub/kotlin
@@ -37,7 +37,7 @@ services:
       - ./host-logs:/app/raynet/datahub/task-logs
 
   agent:
-    image: raynetgmbh/rayventory-datahub-agent:14.0.5915.129
+    image: raynetgmbh/rayventory-datahub-agent:14.1.6298.172
     depends_on:
       - web
     restart: always
@@ -46,5 +46,6 @@ services:
       - TenantId={72ba6fc2-d5fa-49ee-8281-841e762aea05}
       - KotlinDirectoryPath=/app/raynet/datahub-agent/kotlin
       - DataHubApiKey=AHE5M61-MWDM5MQ-KXHNQA0-0ZSNG74
+      - AgentId=70E33B8A-EEEB-4649-97FF-D258E042F9AF
 volumes: 
   sql_data:
