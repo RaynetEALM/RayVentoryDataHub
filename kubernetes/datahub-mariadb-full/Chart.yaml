@@ -1,5 +1,5 @@
 apiVersion: v2
 name: rayventory-data-hub
-description: A helm chart for deployment of standalone instance of Rayventory Data Hub
+description: A helm chart for deployment of standalone instance of Raynet One Data Hub
 version: 0.1.0
 appVersion: "1.0"
