@@ -12,9 +12,9 @@ By leveraging existing data sources, vulnerabilities and missing data are quickl
 ### Prerequisities
 In order to run this container you'll need docker installed.
 
-* [Windows](https://docs.docker.com/windows/started)
-* [OS X](https://docs.docker.com/mac/started/)
-* [Linux](https://docs.docker.com/linux/started/)
+* [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+* [OS X](https://docs.docker.com/desktop/setup/install/mac-install/)
+* [Linux](https://docs.docker.com/desktop/setup/install/linux/)
 
 On Windows, make sure to use Linux Containers, WSL2 is recommended. 
 
